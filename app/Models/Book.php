@@ -16,6 +16,7 @@ class Book extends Model
         'author',
         'published_at',
         'is_active',
+        'category_id',
     ];
 
     protected $casts =[
@@ -23,9 +24,14 @@ class Book extends Model
     ];
 
 
-    public function setPublishedAtAttribute($published_at)
+    public function setPublishedAtAttribute($published_at): void
     {
         $this->attributes['published_at'] = Carbon::parse($published_at)->format('Y-m-d');
+    }
+
+    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
 }

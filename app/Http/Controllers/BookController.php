@@ -28,7 +28,7 @@ class BookController extends Controller
      $books= $this->BookService->getAll();
      return response()->json([
          'status' => 'success',
-         'message' => 'Tasks retrieved successfully',
+         'message' => 'Books retrieved successfully',
          'books' => [
              'info' => BookResource::collection($books['data']),
              'current_page' => $books['current_page'],
@@ -102,7 +102,7 @@ class BookController extends Controller
             'message' => 'Trashed Books retrieved successfully',
             'books' => [
                 'books' => [
-            'info' => BookResource::collection($trashedBooks->items()), 
+            'info' => BookResource::collection($trashedBooks->items()),
             'current_page' => $trashedBooks->currentPage(),
             'last_page' => $trashedBooks->lastPage(),
             'per_page' => $trashedBooks->perPage(),
@@ -120,7 +120,7 @@ class BookController extends Controller
         $book=$this->BookService->restoreDeleted($id);
         return response()->json([
             'status' => 'success',
-            'message' => 'Trashed Books restored successfully',
+            'message' => 'Trashed Book restored successfully',
             'book' => BookResource::make($book),
            ] , 200); // OK
     }
