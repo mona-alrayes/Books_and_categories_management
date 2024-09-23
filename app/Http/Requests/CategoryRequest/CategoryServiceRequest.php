@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\BookRequest;
+namespace App\Http\Requests\CategoryRequest;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class BookServiceRequest extends FormRequest
+class CategoryServiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,27 +22,20 @@ class BookServiceRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'title' => ['string', 'min:3', 'max:255'],
-            'author' => ['string', 'min:3', 'max:255'],
-            'published_at' => ['date_format:d-m-Y'],
-            'is_active' => ['boolean'],
-            'category_id' => ['integer', 'exists:categories,id']
+            'name' => ['string', 'min:3', 'max:255'],
+            'description' => ['string', 'min:3', 'max:255'],
         ];
 
         if ($this->isMethod('post')) {
             // Required for store request
-            $rules['title'][] = 'required';
-            $rules['author'][] = 'required';
-            $rules['published_at'][] = 'required';
-            $rules['is_active'][] = 'required';
-            $rules['category_id'][] = 'required';
+            $rules['name'][] = 'required';
+            $rules['description'][] = 'nullable';
+
         } else if ($this->isMethod('put')) {
             // Allow optional fields for update request
-            $rules['title'][] = 'sometimes';
-            $rules['author'][] = 'sometimes';
-            $rules['published_at'][] = 'nullable';
-            $rules['is_active'][] = 'sometimes';
-            $rules['category_id'][] = 'sometimes';
+            $rules['name'][] = 'sometimes';
+            $rules['description'][] = 'nullable';
+
         }
 
         return $rules;
@@ -58,10 +51,6 @@ class BookServiceRequest extends FormRequest
             'string' => 'حقل :attribute يجب أن يكون نصًا وليس أي نوع آخر',
             'max' => 'عدد محارف :attribute لا يجب أن يتجاوز 255 محرفًا',
             'min' => 'حقل :attribute يجب أن يكون 3 محارف على الأقل',
-            'date_format' => 'حقل :attribute يجب أن يكون بصيغة تاريخ صحيحة مثل :format',
-            'boolean' => 'حقل :attribute يجب ان يكون اما نشط او غير نشط',
-            'category_id.exists' => 'الصنف المختار غير موجود في قاعدة البيانات',
-            'integer' => 'حقل :attribute يجب أن يكون رقماً',
         ];
     }
 
@@ -71,10 +60,8 @@ class BookServiceRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'title' => 'العنوان',
-            'author' => 'المؤلف',
-            'published_at' => 'تاريخ النشر',
-            'is_active' => 'حالة الكتاب',
+            'name' => 'اسم التصنيف',
+            'description' => 'الوصف',
         ];
     }
 
@@ -84,9 +71,8 @@ class BookServiceRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'title' => ucwords(strtolower($this->input('title'))),
-            'author' => ucwords(strtolower($this->input('author'))),
-            'is_active' => $this->input('is_active') === 'active' ? 1 : ($this->input('is_active') === 'not active' ? 0 : $this->input('is_active')),
+            'name' => ucwords(strtolower($this->input('title'))),
+            'description' => ucwords(strtolower($this->input('author'))),
         ]);
     }
 

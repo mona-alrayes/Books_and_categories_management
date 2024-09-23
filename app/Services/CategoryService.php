@@ -180,4 +180,19 @@ class CategoryService
             throw new Exception('Failed to restore category: ' . $e->getMessage());
         }
     }
+
+    /**
+     * @throws Exception
+     */
+    public function showBooksOfCategory(string $id)
+    {
+        try {
+            $category= Category::findOrFail($id);
+            return $books = $category->books();
+        }catch (ModelNotFoundException $e) {
+            throw new Exception('Category not found: ' . $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception('Failed to retrieve Book of this category: ' . $e->getMessage());
+        }
+    }
 }

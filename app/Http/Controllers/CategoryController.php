@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\CategoryService;
+use App\Http\Requests\CategoryRequest\StoreCategoryRequest;
+use App\Http\Requests\CategoryRequest\UpdateCategoryRequest;
+use App\Http\Resources\BookResource;
 use App\Http\Resources\CategroyResource;
-use App\Http\Requests\StorecatergoryRequest;
-use App\Http\Requests\UpdatecatergoryRequest;
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
@@ -23,6 +24,7 @@ class CategoryController extends Controller
 
     /**
      * Display a listing of the resource.
+     * @throws \Exception
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
@@ -42,8 +44,9 @@ class CategoryController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @throws \Exception
      */
-    public function store(StorecatergoryRequest $request): \Illuminate\Http\JsonResponse
+    public function store(StoreCategoryRequest $request): \Illuminate\Http\JsonResponse
     {
         $category = $this->CategoryService->store($request->validated());
 
@@ -56,21 +59,23 @@ class CategoryController extends Controller
 
     /**
      * Display the specified resource.
+     * @throws \Exception
      */
     public function show(string $id): \Illuminate\Http\JsonResponse
     {
         $category = $this->CategoryService->show($id);
         return response()->json([
             'status' => 'success',
-            'message' => 'Category retrived successfully',
+            'message' => 'Category retrieved successfully',
             'Category' => CategroyResource::make($category),
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
+     * @throws \Exception
      */
-    public function update(UpdatecatergoryRequest $request, string $id): \Illuminate\Http\JsonResponse
+    public function update(UpdateCategoryRequest $request, string $id): \Illuminate\Http\JsonResponse
     {
         $category = $this->CategoryService->update($request->validated(), $id);
 
@@ -83,6 +88,7 @@ class CategoryController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @throws \Exception
      */
     public function destroy(string $id): \Illuminate\Http\JsonResponse
     {
@@ -92,6 +98,10 @@ class CategoryController extends Controller
             'message' => $message,
         ], 200); // OK
     }
+
+    /**
+     * @throws \Exception
+     */
     public function ShowTrashed(): \Illuminate\Http\JsonResponse
     {
         $trashedCategory= $this->CategoryService->showDeleted();
@@ -133,6 +143,19 @@ class CategoryController extends Controller
             'status' => 'success',
             'message' => $message,
         ] , 200); // OK
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function indexByCategory(string $id): \Illuminate\Http\JsonResponse
+    {
+        $BooksByCategory= $this->CategoryService->showBooksOfCategory($id);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Books retrieved successfully',
+            'books' => BookResource::collection($BooksByCategory),
+        ], 200); // OK
     }
 
 }
