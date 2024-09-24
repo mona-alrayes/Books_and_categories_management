@@ -71,8 +71,8 @@ class CategoryServiceRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'name' => ucwords(strtolower($this->input('title'))),
-            'description' => ucwords(strtolower($this->input('author'))),
+            'name' => ucwords(strtolower($this->input('name'))),
+            'description' => ucwords(strtolower($this->input('description'))),
         ]);
     }
 
