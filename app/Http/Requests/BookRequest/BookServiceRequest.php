@@ -41,7 +41,7 @@ class BookServiceRequest extends FormRequest
             $rules['title'][] = 'sometimes';
             $rules['author'][] = 'sometimes';
             $rules['published_at'][] = 'nullable';
-            $rules['is_active'][] = 'sometimes';
+            $rules['is_active'][] = 'nullable';
             $rules['category_id'][] = 'sometimes';
         }
 
